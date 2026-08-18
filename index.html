@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Katrin Benke — Conveyor Portfolio Prototype</title>
+<style>
+:root{--bg:#f4f1eb;--text:#151515;--muted:#7d786f;--line:#d9d3ca;--panel:#ece7df;--drawer:#161616;--drawer-text:#f4f1eb;--max:1440px}
+*{box-sizing:border-box}html,body{margin:0;padding:0}body{background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}button{font:inherit}
+.site{width:min(100%,var(--max));margin:0 auto;padding:22px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:18px 0;border-bottom:1px solid var(--line);position:sticky;top:0;background:rgba(244,241,235,.92);backdrop-filter:blur(10px);z-index:20}
+.brand{font-size:14px;letter-spacing:.08em;text-transform:uppercase}
+.menu-btn{border:1px solid var(--text);background:transparent;padding:9px 12px;cursor:pointer;letter-spacing:.08em;text-transform:uppercase;font-size:12px}
+.hero{min-height:34vh;display:flex;flex-direction:column;justify-content:end;padding:52px 0 36px}
+.hero h1{margin:0;font-size:clamp(52px,10vw,140px);line-height:.82;letter-spacing:-.08em;text-transform:uppercase}
+.hero p{margin:20px 0 0;color:var(--muted);text-transform:uppercase;letter-spacing:.12em;font-size:13px}
+.gallery-shell{padding:34px 0 60px;border-top:1px solid var(--line)}
+.gallery-head{display:flex;justify-content:space-between;gap:20px;align-items:end;margin-bottom:20px}
+.gallery-title-wrap h2{margin:0;font-size:clamp(34px,5vw,72px);letter-spacing:-.06em;text-transform:uppercase}
+.gallery-meta{margin-top:10px;color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.counter{color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase}
+.conveyor-wrap{display:grid;grid-template-columns:48px 1fr 48px;gap:12px;align-items:center}
+.nav-arrow{height:100%;min-height:280px;border:1px solid var(--line);background:transparent;cursor:pointer;font-size:28px;transition:.2s ease}
+.nav-arrow:hover:not(:disabled){background:#111;color:#fff}.nav-arrow:disabled{opacity:.2;cursor:default}
+.viewport{overflow:hidden}.track{display:flex;gap:16px;transition:transform .45s cubic-bezier(.22,.8,.28,1);will-change:transform}
+.card{flex:0 0 calc((100% - 48px)/4);cursor:pointer}
+.thumb{aspect-ratio:4/5;background:var(--panel);border:1px solid var(--line);display:grid;place-items:center;color:var(--muted);font-size:12px;letter-spacing:.08em;text-transform:uppercase;overflow:hidden}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.caption{display:flex;justify-content:space-between;gap:10px;padding-top:10px;color:var(--muted);font-size:11px;text-transform:uppercase;letter-spacing:.06em}.caption strong{color:var(--text);font-weight:400}
+.drawer-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.35);opacity:0;pointer-events:none;transition:.25s ease;z-index:29}.drawer-backdrop.open{opacity:1;pointer-events:auto}
+.drawer{position:fixed;inset:0 auto 0 0;width:min(390px,88vw);background:var(--drawer);color:var(--drawer-text);transform:translateX(-100%);transition:.32s cubic-bezier(.22,.8,.28,1);z-index:30;padding:26px;display:flex;flex-direction:column}.drawer.open{transform:translateX(0)}
+.drawer-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:18px}.drawer-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase}.drawer-close{border:1px solid rgba(255,255,255,.5);background:transparent;color:inherit;padding:8px 10px;cursor:pointer}
+.series-list{display:grid;margin-top:28px}.series-link{background:transparent;color:inherit;border:0;border-bottom:1px solid rgba(255,255,255,.16);padding:18px 0;text-align:left;cursor:pointer;display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:baseline}
+.series-link span:first-child,.series-link span:last-child{color:rgba(255,255,255,.5);font-size:11px}.series-link strong{font-size:18px;font-weight:400}.series-link:hover strong{font-style:italic}
+.lightbox{position:fixed;inset:0;background:rgba(12,12,12,.96);color:white;z-index:40;display:none;grid-template-rows:auto 1fr auto}.lightbox.open{display:grid}
+.lightbox-top,.lightbox-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.lightbox-top{border-bottom:1px solid rgba(255,255,255,.16)}.lightbox-bottom{border-top:1px solid rgba(255,255,255,.16)}
+.lightbox-close,.lightbox-nav{border:1px solid rgba(255,255,255,.45);background:transparent;color:white;padding:9px 12px;cursor:pointer}
+.lightbox-stage{display:grid;grid-template-columns:56px 1fr 56px;gap:16px;align-items:center;min-height:0;padding:18px}
+.lightbox-image{width:100%;height:100%;min-height:0;display:grid;place-items:center;overflow:hidden}.lightbox-image img{max-width:100%;max-height:100%;object-fit:contain}
+.placeholder-large{width:min(70vw,760px);aspect-ratio:4/5;background:#2a2a2a;border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;font-size:13px}
+.lightbox-title{color:white}.lightbox-meta{color:rgba(255,255,255,.55)}
+@media (max-width:900px){
+.site{padding:16px}.hero{min-height:28vh;padding-top:42px}.conveyor-wrap{grid-template-columns:36px 1fr 36px;gap:8px}.nav-arrow{min-height:220px;font-size:24px}.card{flex:0 0 62%}.track{gap:12px}.gallery-head{align-items:start;flex-direction:column}
+.lightbox-stage{grid-template-columns:1fr;padding:12px}.lightbox-stage .lightbox-nav{display:none}.placeholder-large{width:92vw}
+}
+
+.hero h1{font-size:clamp(48px,8vw,112px);line-height:.9}
+.hero .location{margin-top:16px;color:var(--text);font-size:12px}
+.contact{margin-top:30px;display:flex;flex-direction:column;align-items:flex-start;gap:5px;font-size:12px;line-height:1.45}
+.contact span{margin-bottom:3px;color:var(--muted);text-transform:uppercase;letter-spacing:.1em;font-size:10px}
+.contact a{color:var(--text);text-decoration:none;border-bottom:1px solid transparent}
+.contact a:hover{border-bottom-color:var(--text)}
+.series-heading{display:flex;align-items:center;gap:16px}
+.current-series-symbol{width:42px;height:42px;object-fit:contain;filter:grayscale(1)}
+.series-link{grid-template-columns:40px 1fr 34px 24px}
+.series-symbol{width:30px;height:30px;object-fit:contain;filter:invert(1) grayscale(1);opacity:.9}
+@media(max-width:900px){.contact{margin-top:24px}.current-series-symbol{width:34px;height:34px}}
+</style>
+</head>
+<body>
+<div class="drawer-backdrop" id="backdrop"></div>
+<aside class="drawer" id="drawer">
+  <div class="drawer-top"><div class="drawer-title">Series</div><button class="drawer-close" id="drawerClose">Close</button></div>
+  <div class="series-list" id="seriesList"></div>
+</aside>
+
+<div class="lightbox" id="lightbox">
+  <div class="lightbox-top"><div id="lightboxSeries">Series</div><button class="lightbox-close" id="lightboxClose">Close</button></div>
+  <div class="lightbox-stage" id="lightboxStage">
+    <button class="lightbox-nav" id="lightboxPrev">←</button>
+    <div class="lightbox-image" id="lightboxImage"></div>
+    <button class="lightbox-nav" id="lightboxNext">→</button>
+  </div>
+  <div class="lightbox-bottom">
+    <div><div class="lightbox-title" id="lightboxTitle">Work title</div><div class="lightbox-meta" id="lightboxMeta">2026 / medium</div></div>
+    <div id="lightboxCount">01 / 12</div>
+  </div>
+</div>
+
+<main class="site">
+<header class="topbar"><div class="brand">Kateryna Benke</div><button class="menu-btn" id="menuBtn">Series</button></header>
+<section class="hero">
+<h1>Kateryna Benke</h1>
+<p class="location">Kyiv, Ukraine</p>
+<p>analog print and wood cut artist</p>
+<div class="contact">
+<span>Contact me:</span>
+<a href="mailto:kate.benke@gmail.com">kate.benke@gmail.com</a>
+<a href="https://t.me/capoeirista_katarina">@capoeirista_katarina (Telegram)</a>
+</div>
+</section>
+<section class="gallery-shell">
+  <div class="gallery-head">
+    <div class="gallery-title-wrap"><div class="series-heading"><img id="seriesSymbol" class="current-series-symbol" src="images/traces.png" alt=""><h2 id="seriesTitle">Traces serie</h2></div><div class="gallery-meta" id="seriesMeta"></div></div>
+    <div class="counter" id="stripCounter">1–4 / 12</div>
+  </div>
+  <div class="conveyor-wrap">
+    <button class="nav-arrow" id="prevBtn" aria-label="Previous works">←</button>
+    <div class="viewport" id="viewport"><div class="track" id="track"></div></div>
+    <button class="nav-arrow" id="nextBtn" aria-label="Next works">→</button>
+  </div>
+</section>
+</main>
+
+<script>
+const series=[
+{id:"traces",title:"Traces serie",meta:"",symbol:"images/traces.png",works:Array.from({length:12},(_,i)=>({title:`Work ${String(i+1).padStart(2,"0")}`,year:"",medium:"",src:""}))},
+{id:"noir",title:"Noir serie",meta:"",symbol:"images/noir.png",works:Array.from({length:12},(_,i)=>({title:`Work ${String(i+1).padStart(2,"0")}`,year:"",medium:"",src:""}))},
+{id:"reflections",title:"Reflections serie",meta:"",symbol:"images/reflections.png",works:Array.from({length:12},(_,i)=>({title:`Work ${String(i+1).padStart(2,"0")}`,year:"",medium:"",src:""}))}
+];
+let currentSeriesIndex=0,currentPage=0,currentLightboxIndex=0,touchStartX=0;
+const $=id=>document.getElementById(id);
+const els={drawer:$("drawer"),backdrop:$("backdrop"),menuBtn:$("menuBtn"),drawerClose:$("drawerClose"),seriesList:$("seriesList"),seriesTitle:$("seriesTitle"),seriesMeta:$("seriesMeta"),seriesSymbol:$("seriesSymbol"),stripCounter:$("stripCounter"),track:$("track"),viewport:$("viewport"),prevBtn:$("prevBtn"),nextBtn:$("nextBtn"),lightbox:$("lightbox"),lightboxClose:$("lightboxClose"),lightboxPrev:$("lightboxPrev"),lightboxNext:$("lightboxNext"),lightboxImage:$("lightboxImage"),lightboxSeries:$("lightboxSeries"),lightboxTitle:$("lightboxTitle"),lightboxMeta:$("lightboxMeta"),lightboxCount:$("lightboxCount"),lightboxStage:$("lightboxStage")};
+function visibleCount(){return window.innerWidth<=900?2:4}
+function renderSeriesMenu(){els.seriesList.innerHTML="";series.forEach((s,index)=>{const btn=document.createElement("button");btn.className="series-link";btn.innerHTML=`<span>${String(index+1).padStart(2,"0")}</span><strong>${s.title}</strong><img class="series-symbol" src="${s.symbol}" alt="" onerror="this.style.visibility=\'hidden\'"><span>${s.works.length}</span>`;btn.onclick=()=>{currentSeriesIndex=index;currentPage=0;renderGallery();closeDrawer()};els.seriesList.appendChild(btn)})}
+function renderGallery(){const s=series[currentSeriesIndex];els.seriesTitle.textContent=s.title;els.seriesMeta.textContent=s.meta;els.seriesSymbol.src=s.symbol;els.track.innerHTML="";s.works.forEach((work,index)=>{const card=document.createElement("article");card.className="card";const imageMarkup=work.src?`<img src="${work.src}" alt="${work.title}">`:`<div>${work.title}</div>`;card.innerHTML=`<div class="thumb">${imageMarkup}</div><div class="caption"><strong>${work.title}</strong><span>${work.year}</span></div>`;card.onclick=()=>openLightbox(index);els.track.appendChild(card)});updateConveyor()}
+function maxPage(){const c=visibleCount();return Math.max(0,Math.ceil(series[currentSeriesIndex].works.length/c)-1)}
+function updateConveyor(){const c=visibleCount();currentPage=Math.min(currentPage,maxPage());const gap=window.innerWidth<=900?12:16;const vw=els.viewport.clientWidth;const cw=window.innerWidth<=900?vw*.62:(vw-gap*3)/4;els.track.style.transform=`translateX(-${currentPage*c*(cw+gap)}px)`;const total=series[currentSeriesIndex].works.length,start=currentPage*c+1,end=Math.min(start+c-1,total);els.stripCounter.textContent=`${start}–${end} / ${total}`;els.prevBtn.disabled=currentPage===0;els.nextBtn.disabled=currentPage===maxPage()}
+function openDrawer(){els.drawer.classList.add("open");els.backdrop.classList.add("open")}function closeDrawer(){els.drawer.classList.remove("open");els.backdrop.classList.remove("open")}
+function openLightbox(i){currentLightboxIndex=i;els.lightbox.classList.add("open");renderLightbox()}function closeLightbox(){els.lightbox.classList.remove("open")}
+function renderLightbox(){const s=series[currentSeriesIndex],w=s.works[currentLightboxIndex];els.lightboxSeries.textContent=s.title;els.lightboxTitle.textContent=w.title;els.lightboxMeta.textContent=`${w.year} / ${w.medium}`;els.lightboxCount.textContent=`${String(currentLightboxIndex+1).padStart(2,"0")} / ${String(s.works.length).padStart(2,"0")}`;els.lightboxImage.innerHTML=w.src?`<img src="${w.src}" alt="${w.title}">`:`<div class="placeholder-large">${w.title}</div>`}
+function lbPrev(){const works=series[currentSeriesIndex].works;currentLightboxIndex=(currentLightboxIndex-1+works.length)%works.length;renderLightbox()}function lbNext(){const works=series[currentSeriesIndex].works;currentLightboxIndex=(currentLightboxIndex+1)%works.length;renderLightbox()}
+els.menuBtn.onclick=openDrawer;els.drawerClose.onclick=closeDrawer;els.backdrop.onclick=closeDrawer;els.prevBtn.onclick=()=>{if(currentPage>0){currentPage--;updateConveyor()}};els.nextBtn.onclick=()=>{if(currentPage<maxPage()){currentPage++;updateConveyor()}};els.lightboxClose.onclick=closeLightbox;els.lightboxPrev.onclick=lbPrev;els.lightboxNext.onclick=lbNext;
+document.addEventListener("keydown",e=>{if(els.lightbox.classList.contains("open")){if(e.key==="Escape")closeLightbox();if(e.key==="ArrowLeft")lbPrev();if(e.key==="ArrowRight")lbNext()}else{if(e.key==="ArrowLeft"&&currentPage>0){currentPage--;updateConveyor()}if(e.key==="ArrowRight"&&currentPage<maxPage()){currentPage++;updateConveyor()}}});
+els.lightboxStage.addEventListener("touchstart",e=>touchStartX=e.changedTouches[0].clientX,{passive:true});els.lightboxStage.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-touchStartX;if(Math.abs(dx)>50){dx<0?lbNext():lbPrev()}},{passive:true});
+els.viewport.addEventListener("touchstart",e=>touchStartX=e.changedTouches[0].clientX,{passive:true});els.viewport.addEventListener("touchend",e=>{const dx=e.changedTouches[0].clientX-touchStartX;if(Math.abs(dx)>50){if(dx<0&&currentPage<maxPage())currentPage++;if(dx>0&&currentPage>0)currentPage--;updateConveyor()}},{passive:true});
+window.addEventListener("resize",updateConveyor);renderSeriesMenu();renderGallery();
+</script>
+</body>
+</html>
