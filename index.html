@@ -32,16 +32,16 @@
 .drawer-top{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:18px}.drawer-title{font-size:12px;letter-spacing:.1em;text-transform:uppercase}.drawer-close{border:1px solid rgba(255,255,255,.5);background:transparent;color:inherit;padding:8px 10px;cursor:pointer}
 .series-list{display:grid;margin-top:28px}.series-link{background:transparent;color:inherit;border:0;border-bottom:1px solid rgba(255,255,255,.16);padding:18px 0;text-align:left;cursor:pointer;display:grid;grid-template-columns:54px 1fr auto;gap:12px;align-items:baseline}
 .series-link span:first-child,.series-link span:last-child{color:rgba(255,255,255,.5);font-size:11px}.series-link strong{font-size:18px;font-weight:400}.series-link:hover strong{font-style:italic}
-.lightbox{position:fixed;inset:0;background:rgba(12,12,12,.96);color:white;z-index:40;display:none;grid-template-rows:auto 1fr auto}.lightbox.open{display:grid}
+.lightbox{position:fixed;inset:0;height:100vh;height:100dvh;overflow:hidden;background:rgba(12,12,12,.96);color:white;z-index:40;display:none;grid-template-rows:auto minmax(0,1fr) auto}.lightbox.open{display:grid}
 .lightbox-top,.lightbox-bottom{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:18px 22px;font-size:12px;letter-spacing:.08em;text-transform:uppercase}.lightbox-top{border-bottom:1px solid rgba(255,255,255,.16)}.lightbox-bottom{border-top:1px solid rgba(255,255,255,.16)}
 .lightbox-close,.lightbox-nav{border:1px solid rgba(255,255,255,.45);background:transparent;color:white;padding:9px 12px;cursor:pointer}
-.lightbox-stage{display:grid;grid-template-columns:56px 1fr 56px;gap:16px;align-items:center;min-height:0;padding:18px}
-.lightbox-image{width:100%;height:100%;min-height:0;display:grid;place-items:center;overflow:hidden}.lightbox-image img{max-width:100%;max-height:100%;object-fit:contain}
+.lightbox-stage{display:grid;grid-template-columns:56px minmax(0,1fr) 56px;gap:16px;align-items:center;min-width:0;min-height:0;overflow:hidden;padding:18px}
+.lightbox-image{width:100%;height:100%;min-width:0;min-height:0;display:grid;place-items:center;overflow:hidden}.lightbox-image img{display:block;width:auto;height:auto;max-width:100%;max-height:100%;object-fit:contain}
 .placeholder-large{width:min(70vw,760px);aspect-ratio:4/5;background:#2a2a2a;border:1px solid rgba(255,255,255,.18);display:grid;place-items:center;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;font-size:13px}
 .lightbox-title{color:white}.lightbox-meta{color:rgba(255,255,255,.55)}
 @media (max-width:900px){
 .site{padding:16px}.hero{min-height:28vh;padding-top:42px}.conveyor-wrap{grid-template-columns:36px 1fr 36px;gap:8px}.nav-arrow{min-height:220px;font-size:24px}.card{flex:0 0 62%}.track{gap:12px}.gallery-head{align-items:start;flex-direction:column}
-.lightbox-stage{grid-template-columns:1fr;padding:12px}.lightbox-stage .lightbox-nav{display:none}.placeholder-large{width:92vw}
+.lightbox-stage{grid-template-columns:minmax(0,1fr);padding:12px}.lightbox-stage .lightbox-nav{display:none}.placeholder-large{width:92vw}
 }
 
 .hero h1{font-size:clamp(48px,8vw,112px);line-height:.9}
